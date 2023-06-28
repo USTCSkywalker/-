@@ -8,12 +8,12 @@
 #include "ThreadPool.h"
 
 int main() {
-    ThreadPool pool(4);
-    std::vector< std::future<int> > results;
+    ThreadPool pool(4); // 创建一个线程池，池中线程数为4
+    std::vector< std::future<int> > results;    // 创建一个保存std::future<int>的数组，用于存储4个异步线程的结果
 
-    for (int i = 0; i < 8; ++i) {
-        results.emplace_back(
-            pool.enqueue([i] {
+    for (int i = 0; i < 8; ++i) {   // 创建8个任务
+        results.emplace_back(   // 一次保存每个异步结果
+            pool.enqueue([i] {  // 将每个任务插入到任务队列中，每个任务的功能均为“打印+睡眠1s+打印+返回结果”
                 std::cout << "hello " << i << std::endl;
                 std::this_thread::sleep_for(std::chrono::seconds(1));
                 std::cout << "world " << i << std::endl;
@@ -22,7 +22,7 @@ int main() {
         );
     }
 
-    for (auto&& result : results)
+    for (auto&& result : results)   // 一次取出保存在results中的异步结果
         std::cout << result.get() << ' ';
     std::cout << std::endl;
 
